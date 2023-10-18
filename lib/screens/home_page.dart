@@ -1,3 +1,4 @@
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:kriyona/utils/globle.dart';
@@ -11,6 +12,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  var _selectedTab = _SelectedTab.home;
+
+  void _handleIndexChanged(int i) {
+    setState(() {
+      _selectedTab = _SelectedTab.values[i];
+    });
+  }
+
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -50,74 +59,60 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: Colors.white,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: Align(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Align(
                 alignment: Alignment.topCenter,
                 child: Container(
-                  alignment: Alignment.center,
-                  height: height / 5,
-                  decoration: const BoxDecoration(
-                    color: Colors.amberAccent,
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(60),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 7,
+                  ),
+                  height: height / 16,
+                  width: 270,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(40),
+                    ),
+                    border: Border.all(
+                      color: Colors.grey.shade700,
+                      width: 1,
                     ),
                   ),
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 7,
-                    ),
-                    height: height / 16,
-                    width: 270,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(40),
-                      ),
-                      border: Border.all(
-                        color: Colors.grey.shade700,
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.search_outlined,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.search_outlined,
+                            color: Colors.grey.shade700,
+                          ),
+                          SizedBox(
+                            width: width / 35,
+                          ),
+                          Text(
+                            "search product",
+                            style: TextStyle(
                               color: Colors.grey.shade700,
+                              letterSpacing: 2,
+                              fontSize: 12,
                             ),
-                            SizedBox(
-                              width: width / 35,
-                            ),
-                            Text(
-                              "search product",
-                              style: TextStyle(
-                                color: Colors.grey.shade700,
-                                letterSpacing: 2,
-                                fontSize: 12,
-                              ),
-                            )
-                          ],
-                        ),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.grey.shade700,
-                            ))
-                      ],
-                    ),
+                          )
+                        ],
+                      ),
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.camera_alt_outlined,
+                            color: Colors.grey.shade700,
+                          ))
+                    ],
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 6,
-              child: SingleChildScrollView(
+              SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: allProduct.map((e) {
@@ -376,10 +371,46 @@ class _HomePageState extends State<HomePage> {
                   }).toList(),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: DotNavigationBar(
+        margin: EdgeInsets.only(left: 10, right: 10),
+        currentIndex: _SelectedTab.values.indexOf(_selectedTab),
+        dotIndicatorColor: Colors.amber,
+        unselectedItemColor: Colors.grey[500],
+        splashBorderRadius: 50,
+        // enableFloatingNavBar: false,
+        onTap: _handleIndexChanged,
+        items: [
+          /// Home
+          DotNavigationBarItem(
+            icon: Icon(Icons.home),
+            selectedColor: Colors.amber,
+          ),
+
+          /// Likes
+          DotNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            selectedColor: Colors.amber,
+          ),
+
+          /// Search
+          DotNavigationBarItem(
+            icon: Icon(Icons.shopping_cart_outlined),
+            selectedColor: Colors.amber,
+          ),
+
+          /// Profile
+          DotNavigationBarItem(
+            icon: Icon(Icons.person),
+            selectedColor: Colors.amber,
+          ),
+        ],
       ),
     );
   }
 }
+
+enum _SelectedTab { home, favorite, cart, person }
